@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario</title>
+</head>
+<body>
+    <h2>Formulario</h2>
+    <form id="formulario">
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" placeholder="Ingrese su nombre" required>
+        </div>
+        <div>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" placeholder="Ingrese sus apellidos" required>
+        </div>
+        <div>
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" placeholder="Ingrese su edad" min="18" required>
+        </div>
+        <div>
+            <label>Sexo:</label><br>
+            <input type="radio" id="masculino" name="sexo" value="Masculino">
+            <label for="masculino">Masculino</label><br>
+            <input type="radio" id="femenino" name="sexo" value="Femenino">
+            <label for="femenino">Femenino</label>
+        </div>
+        <div>
+            <label for="situacion">Situación familiar:</label>
+            <select id="situacion">
+                <option value="" disabled selected>Elige una opción</option>
+            </select>
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Ingrese su correo electrónico" required>
+        </div>
+        <div>
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" placeholder="Ingrese su número de teléfono" pattern="[0-9 ]+" required>
+        </div>
+        <button type="submit">Enviar</button>
+    </form>
+    <div id="error" style="color: red;"></div>
+
+    <script>
+        const situacionSelect = document.getElementById('situacion');
+        const masculinoRadio = document.getElementById('masculino');
+        const femeninoRadio = document.getElementById('femenino');
+
+        masculinoRadio.addEventListener('change', function() {
+            cambiarGenero('Masculino');
+        });
+
+        femeninoRadio.addEventListener('change', function() {
+            cambiarGenero('Femenino');
+        });
+
+        function cambiarGenero(genero) {
+            situacionSelect.innerHTML = '';
+            const options = {
+                Masculino: ['Soltero', 'Casado', 'Divorciado', 'Viudo'],
+                Femenino: ['Soltera', 'Casada', 'Divorciada', 'Viuda']
+            }[genero];
+
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.toLowerCase();
+                optionElement.textContent = option;
+                situacionSelect.appendChild(optionElement);
+            });
+        }
+
+        document.getElementById('formulario').addEventListener('submit', function(event) {
+            let edad = document.getElementById('edad').value;
+            if (edad < 18) {
+                showError('La edad debe ser mayor de 18 años.');
+                event.preventDefault();
+                return;
+            }
+
+            let email = document.getElementById('email').value;
+            if (!isValidEmail(email)) {
+                showError('El formato del email no es válido.');
+                event.preventDefault();
+                return;
+            }
+
+            let telefono = document.getElementById('telefono').value;
+            if (!isValidPhone(telefono)) {
+                showError('El teléfono solo puede contener números y espacios.');
+                event.preventDefault();
+                return;
+            }
+
+            document.getElementById('error').innerText = '';
+        });
+
+        function isValidEmail(email) {
+            let regex = /\S+@\S+\.\S+/;
+            return regex.test(email);
+        }
+
+        function isValidPhone(phone) {
+            let regex = /^[0-9 ]+$/;
+            return regex.test(phone);
+        }
+
+        function showError(message) {
+            document.getElementById('error').innerText = message;
+        }
+
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+        }
+    </script>
+</body>
+</html>
